@@ -1,4 +1,5 @@
-#Tue Jul 17 09:55:40 ICT 2012
+#Tue Jul 17 10:10:53 ICT 2012
+hg.cloneUncompressed=true
 eclipse.preferences.version=1
 hg=E\:\\eclipse program\\eclipse-jee-indigo-SR1-win32\\eclipse\\plugins\\com.intland.hgbinary.win32_1.9.3\\os\\win32\\hg.exe
 hg.batchsize.status=10
