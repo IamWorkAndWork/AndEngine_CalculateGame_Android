@@ -1,0 +1,10 @@
+!SESSION 2555-07-17 09:55:05.127 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_22
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=th_TH
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -data C:\Dev\_My Project\Source-Code\CalculateGame -product org.eclipse.epp.package.jee.product
+
+!ENTRY com.vectrace.MercurialEclipse 2 0 2555-07-17 09:55:10.792
+!MESSAGE Batch size for status command not correct.
