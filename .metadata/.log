@@ -36,3 +36,87 @@ abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-C
 	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
 	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+
+!ENTRY com.vectrace.MercurialEclipse 4 0 2555-07-17 10:08:16.106
+!MESSAGE Clone operation failed
+!STACK 0
+java.lang.reflect.InvocationTargetException
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:113)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	... 1 more
+Root exception:
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+
+!ENTRY com.vectrace.MercurialEclipse 4 0 2555-07-17 10:08:37.331
+!MESSAGE Clone operation failed
+!STACK 0
+java.lang.reflect.InvocationTargetException
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:113)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	... 1 more
+Root exception:
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+
+!ENTRY com.vectrace.MercurialEclipse 4 0 2555-07-17 10:09:39.444
+!MESSAGE Clone operation failed
+!STACK 0
+java.lang.reflect.InvocationTargetException
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:113)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate --uncompressed https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	... 1 more
+Root exception:
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+real URL is https://github.com/phutsa/Source-Code
+warning: github.com certificate with fingerprint ce:67:99:25:2c:ac:78:12:7d:94:b5:62:2c:31:c5:16:a6:34:73:53 not verified (check hostfingerprints or web.cacerts config setting)
+abort: HTTP Error 406: Not Acceptable. Command line: C:\Dev\_My Project\Source-Code:hg -y clone --noupdate --uncompressed https://***@github.com/phutsa/Source-Code.git Source-Code.git, error code: -1
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToStream(AbstractShellCommand.java:448)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:387)
+	at com.vectrace.MercurialEclipse.commands.AbstractShellCommand.executeToBytes(AbstractShellCommand.java:376)
+	at com.vectrace.MercurialEclipse.commands.HgCloneClient.clone(HgCloneClient.java:52)
+	at com.vectrace.MercurialEclipse.operations.CloneOperation.run(CloneOperation.java:102)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
