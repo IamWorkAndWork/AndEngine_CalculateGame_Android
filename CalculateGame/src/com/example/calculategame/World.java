@@ -23,6 +23,7 @@ public class World {
 	public final ArrayList<RandomPloblemFont> randomProblem;
 	public final ArrayList<ExplodeEffect> explodeEffect;
 	public final ArrayList<WindStromEffect> windStromEffect;
+	public final ArrayList<WindStromEffect> explode3Effect;
 //	public final ArrayList<NumberButton> NumberButtonList;
 	public final Food food;
 
@@ -43,10 +44,9 @@ public class World {
 		randomProblem = new ArrayList<RandomPloblemFont>();
 		explodeEffect = new ArrayList<ExplodeEffect>();
 		windStromEffect = new ArrayList<WindStromEffect>();
+		explode3Effect = new ArrayList<WindStromEffect>();
 		ranNotDup = new RandomNoDuplicate();
 		game2 = new RandomGame2();
-//		keepQuestionGame2 = new HashMap<String, String>();
-//		this.NumberButtonList = new ArrayList<NumberButton>();
 		
 		generateObjects();
 		this.score=0;
@@ -67,13 +67,17 @@ public class World {
 			numMonster=4;
 			isGame2FirstTime=false;
 		}
-//		int monsterY=2;
+		int monsterY=1;
 		int x;
 		for (int i = 0; i < numMonster; i++) {
+			monsterY=(int)(Math.random()*13)+1;
+			if (monsterY%2!=0) {
+				monsterY+=1;
+			}
 			x = (int)(Math.random()*(2+LEVEL))+10;
-			Monster_01 monster = new Monster_01(x,(float)Math.random()*(WORLD_HEIGHT/24)+1f );
+			Monster_01 monster = new Monster_01(x,monsterY );
 			monster_01.add(monster);
-//			monsterY+=2;
+			monsterY+=2;
 		}
 		System.out.println();
 		if (GAME_PLAY==1) {
@@ -145,11 +149,24 @@ public class World {
 		updateLaser(deltaTime);
 		updateExplodeEffect(deltaTime);
 		updateWindStromEffect(deltaTime);
-		
+		updateExolode3Effect(deltaTime);
 		checkCollide();
 		
 	}
 
+
+
+	private void updateExolode3Effect(float deltaTime) {
+		int len = explode3Effect.size();
+		for (int i = 0; i < len; i++) {
+			WindStromEffect eff = explode3Effect.get(i);
+			eff.update(deltaTime);
+			if (eff.state==eff.REMOVE) {
+				explode3Effect.remove(eff);
+			}
+			len = explode3Effect.size();
+		}
+	}
 
 
 	private void updateRandomNumberMonster(float deltaTime) {
@@ -170,6 +187,7 @@ public class World {
 	private void checkCollide() {
 		collideLaserVSMonster();
 		collideWindVSMonster();
+		collideEffect3Monster();
 	}
 	
 	
@@ -221,6 +239,26 @@ public class World {
 					laserPlayer.add(laser);
 					len = monster_01.size();
 //					break;
+				}
+			}
+		}
+	}
+	
+	private void collideEffect3Monster() {
+		int len = monster_01.size();
+		int len2 = explode3Effect.size();
+		for (int i = 0; i < len; i++) {
+			Monster_01 monster = monster_01.get(i);
+			RandomPloblemFont ran = randomProblem.get(i);
+			for (int j = 0; j < len2; j++) {
+				WindStromEffect eff3 = explode3Effect.get(j);
+				if (OverlapTester.overlapRectangles(monster.bounds, eff3.bounds)) {
+					if (eff3.stateTime>=0.7f) {
+						createExplode(monster.position.x,monster.position.y);
+						monster_01.remove(monster);
+						randomProblem.remove(ran);
+					}
+					len = monster_01.size();
 				}
 			}
 		}
@@ -279,6 +317,12 @@ public class World {
 		}
 	}
 
+	
+	public void createExplode3Effect(float x, float y) {
+		WindStromEffect effect = new WindStromEffect(x/32f, y/32f);
+		effect.state=effect.FIRE_EFFECT;
+		explode3Effect.add(effect);
+	}
 	private void createExplode(float x, float y) {
 		ExplodeEffect explode = new ExplodeEffect(x, y);
 		explodeEffect.add(explode);
@@ -286,6 +330,7 @@ public class World {
 	
 	public void createWindStromEffect(float x, float y) {
 		WindStromEffect windstrom = new WindStromEffect(x/32f, y/32f);
+		windstrom.state=windstrom.WIND_EFFECT;
 		windStromEffect.add(windstrom);
 	}
 
@@ -333,6 +378,9 @@ public class World {
 			len = monster_01.size();
 		}
 	}
+
+
+	
 
 
 

@@ -52,7 +52,7 @@ public class GameScreen extends GLScreen {
 	
 	public static ArrayList<NumberButton> NumberButtonList;
 	public static ArrayList<NumberButton> OperandButtonList;
-	public static AttackButton attackButton,windButton; 
+	public static AttackButton attackButton,windButton,effect3Button; 
 	
 	int hpLength=100;
 	
@@ -72,6 +72,7 @@ public class GameScreen extends GLScreen {
 		
 		attackButton = new AttackButton(15, 20);
 		windButton = new AttackButton(40,20);
+		effect3Button = new AttackButton(65,20);
 		this.NumberButtonList = new ArrayList<NumberButton>();
 		float x=21.0f,y=460;
 		for (int i = 0; i < 10; i++) {
@@ -118,9 +119,11 @@ public class GameScreen extends GLScreen {
 	}
 
 	boolean windAttackBool=false;
-	float windAttack=1.0f;
+	boolean effect3AttackBool=false;
+//	float windAttack=1.0f;
 	boolean isDragWindButton=false;
 	boolean isAttackButtonClick=false;
+	boolean isEffect3Button=false;
 	private void updateRunning(float deltaTime) {
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		int len = touchEvents.size();
@@ -193,20 +196,30 @@ public class GameScreen extends GLScreen {
 				
 				isAttackButtonClick=false;
 				isDragWindButton=false;
+				isEffect3Button=false;
 
 				if (windAttackBool==true) {
 					world.createWindStromEffect(touchPoint.x,touchPoint.y);
 					windAttackBool=false;
 				}
-				hpLength-=5;
+				if (effect3AttackBool) {
+					world.createExplode3Effect(touchPoint.x,touchPoint.y);
+					effect3AttackBool=false;
+				}
+//				hpLength-=5;
+				
 			}
 			
 			
 			if (event.type==TouchEvent.TOUCH_DRAGGED) {
-				windAttack+=0.01f;
+//				windAttack+=0.01f;
 				if (OverlapTester.pointInRectangle(windButton.bounds, touchPoint.x,touchPoint.y-5)) {
 					isDragWindButton=true;
 					windAttackBool=true;
+				}
+				if (OverlapTester.pointInRectangle(effect3Button.bounds, touchPoint.x,touchPoint.y-5)) {
+					isEffect3Button=true;
+					effect3AttackBool=true;
 				}
 			}
 		}
@@ -314,19 +327,22 @@ public class GameScreen extends GLScreen {
 		}
 		
 		renderWindButton();
+		renderEffect3Button();
 		renderSpacialQuestion();
-		renderHpPoint();
+//		renderHpPoint();
 	}
 	
-int minus=0;
-	float time=0.0f;
-	private void renderHpPoint() {
-		batcher.beginBatch(Assets.hpTexture);
-		TextureRegion keyFrame = Assets.hpRegion.getKeyFrame(time, Animation.ANIMATION_LOOPING);
-		batcher.drawSprite(120, 20, hpLength, 20, keyFrame);
-		batcher.endBatch();
-//		time+=0.01f;
-	}
+
+
+//	int minus=0;
+//	float time=0.0f;
+//	private void renderHpPoint() {
+//		batcher.beginBatch(Assets.hpTexture);
+//		TextureRegion keyFrame = Assets.hpRegion.getKeyFrame(time, Animation.ANIMATION_LOOPING);
+//		batcher.drawSprite(120, 20, hpLength, 20, keyFrame);
+//		batcher.endBatch();
+////		time+=0.01f;
+//	}
 
 	private void renderSpacialQuestion() {
 		if (world.GAME_PLAY==1) {
@@ -350,6 +366,24 @@ int minus=0;
 		else{
 			batcher.beginBatch(Assets.windIconTexture);
 			batcher.drawSprite(windButton.position.x	, windButton.position.y, 17f, 25f, Assets.windIconTextureRegion);
+			batcher.endBatch();
+		}
+	}
+	
+	float magicTime=0.0f;
+	private void renderEffect3Button() {
+		if (isEffect3Button) {
+			magicTime+=0.05f;
+			batcher.beginBatch(Assets.MagicCircleTexture);
+			TextureRegion keyFrame = Assets.MagicCircleAnim.getKeyFrame(magicTime	, Animation.ANIMATION_LOOPING);
+			batcher.drawSprite(touchPoint.x	, touchPoint.y, 32, 32, keyFrame);
+			batcher.endBatch();
+		}
+		else{
+			magicTime=0;
+			batcher.beginBatch(Assets.MagicCircleTexture);
+			TextureRegion keyFrame = Assets.MagicCircleAnim.getKeyFrame(magicTime	, Animation.ANIMATION_LOOPING);
+			batcher.drawSprite(effect3Button.position.x	, effect3Button.position.y, 17f, 25f, keyFrame);
 			batcher.endBatch();
 		}
 	}

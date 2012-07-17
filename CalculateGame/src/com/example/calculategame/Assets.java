@@ -42,6 +42,9 @@ public class Assets {
 	
 	public static Texture BackgroundTexture;
 	public static TextureRegion BackgroundTextureRegion;
+	public static Texture BackgroundTexture2;
+	public static TextureRegion BackgroundRegion2;
+	
 	public static Texture FoodTexture;
 	public static TextureRegion FoodTextureRegion;
 	public static Animation FoodAnimation;
@@ -62,8 +65,16 @@ public class Assets {
 	public static Texture windTexture;
 	public static Animation windAnim;
 	
+	public static Texture explode3Texture;
+	public static Animation explode3Anim;
+	
 	public static Texture windIconTexture;
 	public static TextureRegion windIconTextureRegion;
+	
+	public static Texture MagicCircleTexture;
+	public static Animation MagicCircleAnim;
+	
+
 	
 
 	public static Music music;
@@ -92,6 +103,8 @@ public class Assets {
 		
 		BackgroundTexture= new Texture(game,"background.png");
 		BackgroundTextureRegion = new TextureRegion(BackgroundTexture, 0, 0, 320, 480);
+//		BackgroundTexture2 = new Texture(game, "007-Ocean01.jpg");
+//		BackgroundRegion2 = new TextureRegion(BackgroundTexture2, 0, 0, 640, 640);
 	
 		FoodTexture = new Texture(game,"kn_bandt3.png");
 		FoodTextureRegion = new TextureRegion(FoodTexture, 64*0, 48*2, 64, 48);
@@ -167,6 +180,30 @@ public class Assets {
 		
 		hpTexture = new Texture(game,"hp.png");
 		hpRegion = new Animation(0.1f, new TextureRegion(hpTexture, 0, 0, 192, 32),new TextureRegion(hpTexture, 0, 32, 192, 32));
+		
+		MagicCircleTexture = new Texture(game, "!Hexagram.png");
+		MagicCircleAnim = new Animation(0.2f, 
+				new TextureRegion(MagicCircleTexture, 32*0, 32*0, 32, 32),new TextureRegion(MagicCircleTexture, 32*1, 32*0, 32, 32),
+				new TextureRegion(MagicCircleTexture, 32*2, 32*0, 32, 32),new TextureRegion(MagicCircleTexture, 32*0, 32*1, 32, 32),
+				new TextureRegion(MagicCircleTexture, 32*1, 32*1, 32, 32),new TextureRegion(MagicCircleTexture, 32*2, 32*1, 32, 32),
+				new TextureRegion(MagicCircleTexture, 32*0, 32*2, 32, 32),new TextureRegion(MagicCircleTexture, 32*1, 32*2, 32, 32),
+				new TextureRegion(MagicCircleTexture, 32*2, 32*2, 32, 32),new TextureRegion(MagicCircleTexture, 32*0, 32*3, 32, 32),
+				new TextureRegion(MagicCircleTexture, 32*1, 32*3, 32, 32),new TextureRegion(MagicCircleTexture, 32*2, 32*3, 32, 32));
+		
+		explode3Texture = new Texture(game, "explode3.png");
+		explode3Anim = new Animation(0.07f, 
+				new TextureRegion(explode3Texture, 192*0, 192*0, 192, 192),new TextureRegion(explode3Texture, 192*1, 192*0, 192, 192),
+				new TextureRegion(explode3Texture, 192*2, 192*0, 192, 192),new TextureRegion(explode3Texture, 192*3, 192*0, 192, 192),
+				new TextureRegion(explode3Texture, 192*4, 192*0, 192, 192),
+				new TextureRegion(explode3Texture, 192*0, 192*1, 192, 192),new TextureRegion(explode3Texture, 192*1, 192*1, 192, 192),
+				new TextureRegion(explode3Texture, 192*2, 192*1, 192, 192),new TextureRegion(explode3Texture, 192*3, 192*1, 192, 192),
+				new TextureRegion(explode3Texture, 192*4, 192*1, 192, 192),
+				new TextureRegion(explode3Texture, 192*0, 192*2, 192, 192),new TextureRegion(explode3Texture, 192*1, 192*2, 192, 192),
+				new TextureRegion(explode3Texture, 192*2, 192*2, 192, 192),new TextureRegion(explode3Texture, 192*3, 192*2, 192, 192),
+				new TextureRegion(explode3Texture, 192*4, 192*2, 192, 192),
+				new TextureRegion(explode3Texture, 192*0, 192*3, 192, 192),new TextureRegion(explode3Texture, 192*1, 192*3, 192, 192),
+				new TextureRegion(explode3Texture, 192*2, 192*3, 192, 192),new TextureRegion(explode3Texture, 192*3, 192*3, 192, 192),
+				new TextureRegion(explode3Texture, 192*4, 192*3, 192, 192));
 	}
 	
 
@@ -174,6 +211,28 @@ public class Assets {
 	
 	public static void reload() {
 		FoodTexture.reload();
+		items.reload();
+		numberButtonTexture.reload();
+		numberButtonTexture2.reload();
+		operandButtonTexture1.reload();
+		operandButtonTexture2.reload();
+		windIconTexture.reload();
+		myFontTexture.reload();
+		BackgroundTexture.reload();
+		FoodTexture.reload();
+		LaserPlayerTexture.reload();
+		LaserPlayerTexture2.reload();
+		AttackTexture.reload();
+		AttackTexture2.reload();
+		MonsterBearTexture.reload();
+		MonsterBirdTexture.reload();
+		MonsterStoneTexture.reload();
+		explodeTexture.reload();
+		windTexture.reload();
+		hpTexture.reload();
+		MagicCircleTexture.reload();
+		explode3Texture.reload();
+		
 	}
 
 }

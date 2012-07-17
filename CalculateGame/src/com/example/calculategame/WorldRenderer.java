@@ -48,11 +48,29 @@ public class WorldRenderer {
 		renderLaserPlayer();
 		renderExplodeEffect();
 		renderWindStromEffect();
+		renderExplode3Effect();
 		
 		gl.glDisable(GL10.GL_BLEND);
 	}
 
 
+
+	private void renderExplode3Effect() {
+		int len = world.explode3Effect.size();
+		if (len>0) {
+			batcher.beginBatch(Assets.explode3Texture);
+			for (int i = 0; i < len; i++) {
+				WindStromEffect obj = world.explode3Effect.get(i);
+				TextureRegion keyFrame = Assets.explode3Anim.getKeyFrame(obj.stateTime, Animation.ANIMATION_NONLOOPING);
+				batcher.drawSprite(obj.position.x, obj.position.y, 1.8f, 1.8f, keyFrame);
+				if (obj.stateTime>1f) {
+					obj.state=obj.REMOVE;
+				}
+				len = world.explode3Effect.size();
+			}
+			batcher.endBatch();
+		}
+	}
 
 	private void renderWindStromEffect() {
 		int len = world.windStromEffect.size();
@@ -203,6 +221,10 @@ public class WorldRenderer {
 		batcher.beginBatch(Assets.BackgroundTexture);
 		batcher.drawSprite(cam.position.x, cam.position.y, FRUSTUM_WIDTH, FRUSTUM_HEIGHT, Assets.BackgroundTextureRegion);
 		batcher.endBatch();
+		
+//		batcher.beginBatch(Assets.BackgroundTexture2);
+//		batcher.drawSprite(cam.position.x, cam.position.y, FRUSTUM_WIDTH, FRUSTUM_HEIGHT, Assets.BackgroundRegion2);
+//		batcher.endBatch();
 	}
 
 }
