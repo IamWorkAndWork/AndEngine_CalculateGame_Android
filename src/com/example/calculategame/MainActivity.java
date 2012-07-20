@@ -17,7 +17,7 @@ public class MainActivity extends GLGame{
 	boolean firstTimeCreate = true;
 	
 	public Screen getStartScreen() {
-		return new GameScreen(this);
+		return new MainMenuScreen(this);
 	}
 
 	public void onSurfaceCreated(GL10 gl,EGLConfig config){

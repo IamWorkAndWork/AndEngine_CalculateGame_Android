@@ -19,8 +19,8 @@ public class RandomGame2 {
 			int wcase = (int)(Math.random()*4)+1;
 //			System.out.print("case = "+wcase);
 			while (true) {
-				num1 = (int)(Math.random()*10)+0;
-				num2 = (int)(Math.random()*10)+0;
+				num1 = (int)(Math.random()*(8+numMonster))+0;
+				num2 = (int)(Math.random()*(8+numMonster))+0;
 				switch (wcase) {
 				case 1:
 					operand="+";

@@ -1,8 +1,10 @@
 package com.example.calculategame;
 
 import android.R.animator;
+import android.R.menu;
 
 import com.badlogic.androidgames.framework.Music;
+import com.badlogic.androidgames.framework.Sound;
 import com.badlogic.androidgames.framework.gl.Animation;
 import com.badlogic.androidgames.framework.gl.Font;
 import com.badlogic.androidgames.framework.gl.Texture;
@@ -74,16 +76,45 @@ public class Assets {
 	public static Texture MagicCircleTexture;
 	public static Animation MagicCircleAnim;
 	
-
+	public static Texture menuButtonTexture;
+	public static TextureRegion menuStart1;
+	public static TextureRegion menuStart2;
+	public static TextureRegion menuSetting1;
+	public static TextureRegion menuSetting2;
 	
+	public static Texture test1;
+	public static Texture test2;
+	public static TextureRegion test1Region;
+	public static TextureRegion test2Region;
+	
+	public static Texture HelpScreenTexture1;
+	public static Texture HelpScreenTexture2;
+	public static TextureRegion HelpScreenRegion1;
+	public static TextureRegion HelpScreenRegion2;
 
-	public static Music music;
+	public static TextureRegion soundOn,soundOff,highScoresRegion,arrow;
+	
+	public static TextureRegion pauseMenu;
+	public static TextureRegion ready;
+	public static TextureRegion gameOver;
+	public static TextureRegion pause;
+	
+	public static Music music1,music2,music3;
+    public static Sound explode;
+    public static Sound clickSound;
+    public static Sound windEffect;
+    public static Sound fireEffect;
+//    public static Sound ;
 
 	public static void load(GLGame game) {
 	
 		items = new Texture(game, "items.png");
 //		font = new Font(items, 224/2, 0, 16, 16/2, 20/2);
 		font = new Font(items, 224, 0, 16, 16, 20);
+        soundOff = new TextureRegion(items, 0, 0, 64, 64);
+        soundOn = new TextureRegion(items, 64, 0, 64, 64);
+        highScoresRegion = new TextureRegion(Assets.items, 0, 257, 300, 110 / 3);
+        arrow = new TextureRegion(items, 0, 64, 64, 64);
 		
 		numberButtonTexture = new Texture(game,"numafter.png");
 		numberButtonTextureRegion = new TextureRegion(numberButtonTexture, 0, 0, 250, 34);
@@ -204,11 +235,48 @@ public class Assets {
 				new TextureRegion(explode3Texture, 192*0, 192*3, 192, 192),new TextureRegion(explode3Texture, 192*1, 192*3, 192, 192),
 				new TextureRegion(explode3Texture, 192*2, 192*3, 192, 192),new TextureRegion(explode3Texture, 192*3, 192*3, 192, 192),
 				new TextureRegion(explode3Texture, 192*4, 192*3, 192, 192));
+		
+		menuButtonTexture = new Texture(game,"menubutton.png");
+		menuStart1 = new TextureRegion(menuButtonTexture, 0	, 0, 320, 120);
+		menuStart2 = new TextureRegion(menuButtonTexture, 0	, 120*1, 320, 120);
+		menuSetting1 = new TextureRegion(menuButtonTexture, 0	, 120*2, 320, 120);
+		menuSetting2 = new TextureRegion(menuButtonTexture, 0	, 120*3, 320, 120);
+		
+		
+		test1 = new Texture(game, "mainmenu2.png");
+		test2 = new Texture(game, "mainmenu.png");
+		test1Region = new TextureRegion(test1, 0, 0, 320,480);
+		test2Region = new TextureRegion(test2, 0, 0, 320, 480);
+		
+		HelpScreenTexture1 = new Texture(game, "howTo11.png");
+		HelpScreenTexture2 = new Texture(game, "howTo_2.png");
+		HelpScreenRegion1 = new TextureRegion(HelpScreenTexture1, 0, 0, 1018, 598);
+		HelpScreenRegion2 = new TextureRegion(HelpScreenTexture2, 0, 0, 1018, 598);		
+		
+		 pauseMenu = new TextureRegion(items, 224, 128, 192, 96);
+	     ready = new TextureRegion(items, 320, 224, 192, 32);
+	     gameOver = new TextureRegion(items, 352, 256, 160, 96);
+	     pause = new TextureRegion(items, 64, 64, 64, 64);
+	
+		music1 = game.getAudio().newMusic("1.mid");
+		music2 = game.getAudio().newMusic("2.mid");
+		music3 = game.getAudio().newMusic("3.mid");
+		if (Settings.soundEnabled) {
+			music1.play();
+			music1.setLooping(true);
+			music2.setLooping(true);
+			music3.setLooping(true);
+//			music2.play();
+//			music3.play();
+		}
+		explode = game.getAudio().newSound("explode.wav");
+		clickSound=game.getAudio().newSound("select.wav");
+		windEffect=game.getAudio().newSound("Wind.ogg");
+		fireEffect=game.getAudio().newSound("Fire1.ogg");
+		
 	}
 	
 
-	
-	
 	public static void reload() {
 		FoodTexture.reload();
 		items.reload();
@@ -232,7 +300,21 @@ public class Assets {
 		hpTexture.reload();
 		MagicCircleTexture.reload();
 		explode3Texture.reload();
+		menuButtonTexture.reload();
+		HelpScreenTexture1.reload();
+		HelpScreenTexture2.reload();
 		
+		
+		if (Settings.soundEnabled) {
+			music1.play();
+			music2.play();
+			music3.play();
+		}
 	}
+	
+    public static void playSound(Sound sound) {
+        if(Settings.soundEnabled)
+            sound.play(1);
+    }
 
 }

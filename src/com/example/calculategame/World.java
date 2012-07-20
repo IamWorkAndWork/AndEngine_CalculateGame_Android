@@ -10,7 +10,16 @@ import com.badlogic.androidgames.framework.math.OverlapTester;
 import com.badlogic.androidgames.framework.math.Vector2;
 
 public class World {
+    public interface WorldListener {
+        public void explode();
 
+        public void windEffect();
+
+        public void fireEffect();
+
+        public void touchBounds();
+    }
+    public final WorldListener listener;
 	public static final float WORLD_WIDTH=10;
 	public static final float WORLD_HEIGHT=15*20;
 	public static final int WORLD_STATE_RUNNING=0;
@@ -27,17 +36,19 @@ public class World {
 //	public final ArrayList<NumberButton> NumberButtonList;
 	public final Food food;
 
-	public int score;
 	public int state;
 	public int LEVEL=0;
-	public static int GAME_PLAY = 1 ;
+	public static int GAME_PLAY = 0 ;
+	public  static int score;
 	RandomNoDuplicate ranNotDup;
 	
 	RandomGame2 game2;
 	public static HashMap<String, String> keepQuestionGame2;
 	boolean isGame2FirstTime=true;
 	
-	public World() {
+
+	
+	public World(WorldListener listener) {
 		this.monster_01 = new ArrayList<Monster_01>();
 		this.food = new Food(0.6f, 7.5f);
 		laserPlayer = new ArrayList<LaserPlayer>();
@@ -47,6 +58,7 @@ public class World {
 		explode3Effect = new ArrayList<WindStromEffect>();
 		ranNotDup = new RandomNoDuplicate();
 		game2 = new RandomGame2();
+		this.listener = listener;
 		
 		generateObjects();
 		this.score=0;
@@ -55,13 +67,16 @@ public class World {
 
 	int count=0;
 	int numMonster=2;
-//	TreeSet<String> checkDup = new TreeSet();
 	HashMap<String, String> chkDup = new HashMap<String, String>();
 	private void generateObjects() {
+		if (count%5==0) {
+			GameScreen.limitFire++;
+			GameScreen.limitWind++;
+		}
 		LEVEL++;
 		if (count%2==0) {
 			numMonster++;
-			System.out.println(GAME_PLAY+" = gameplay");
+//			System.out.println(GAME_PLAY+" = gameplay");
 		}
 		if (GAME_PLAY==2 && isGame2FirstTime) {
 			numMonster=4;
@@ -71,15 +86,15 @@ public class World {
 		int x;
 		for (int i = 0; i < numMonster; i++) {
 			monsterY=(int)(Math.random()*13)+1;
-			if (monsterY%2!=0) {
-				monsterY+=1;
-			}
+//			if (monsterY%2!=0) {
+//				monsterY+=1;
+//			}
 			x = (int)(Math.random()*(2+LEVEL))+10;
 			Monster_01 monster = new Monster_01(x,monsterY );
 			monster_01.add(monster);
 			monsterY+=2;
 		}
-		System.out.println();
+//		System.out.println();
 		if (GAME_PLAY==1) {
 			generateProblem(numMonster);
 		}
@@ -163,6 +178,10 @@ public class World {
 			eff.update(deltaTime);
 			if (eff.state==eff.REMOVE) {
 				explode3Effect.remove(eff);
+			}
+			if (eff.stateTime==0.7f) {
+//				
+//				Assets.playSound(Assets.fireEffect);
 			}
 			len = explode3Effect.size();
 		}
@@ -254,9 +273,24 @@ public class World {
 				WindStromEffect eff3 = explode3Effect.get(j);
 				if (OverlapTester.overlapRectangles(monster.bounds, eff3.bounds)) {
 					if (eff3.stateTime>=0.7f) {
+						score+=10;
 						createExplode(monster.position.x,monster.position.y);
 						monster_01.remove(monster);
 						randomProblem.remove(ran);
+				
+						Assets.playSound(Assets.explode);
+//						Assets.playSound(Assets.fireEffect);
+						if (GAME_PLAY==2) {
+							if (monster.state==monster.STATE_BOSS) {
+									for (int k = 0; k < monster_01.size(); k++) {
+										score+=10;
+										createExplode(monster_01.get(k).position.x,monster_01.get(k).position.y);	
+										Assets.playSound(Assets.explode);
+									}
+									monster_01.removeAll(monster_01);
+									randomProblem.removeAll(randomProblem);
+							}
+						}
 					}
 					len = monster_01.size();
 				}
@@ -274,14 +308,16 @@ public class World {
 				LaserPlayer laser = laserPlayer.get(j);
 				if (OverlapTester.overlapRectangles(laser.bounds, monster.bounds)) {
 					createExplode(monster.position.x,monster.position.y);
-
+					Assets.playSound(Assets.explode);					
+					score+=10;
 					laserPlayer.remove(laser);
 					monster_01.remove(monster);
 					randomProblem.remove(ran);
-					
 					if (GAME_PLAY==2) {
 						for (int k = 0; k < monster_01.size(); k++) {
-								createExplode(monster_01.get(k).position.x,monster_01.get(k).position.y);						
+								score+=10;
+								createExplode(monster_01.get(k).position.x,monster_01.get(k).position.y);	
+								Assets.playSound(Assets.explode);
 						}
 						monster_01.removeAll(monster_01);
 						randomProblem.removeAll(randomProblem);
@@ -306,7 +342,11 @@ public class World {
 					createExplode(monster.position.x,monster.position.y);
 					monster_01.remove(monster);
 					randomProblem.remove(ran);
+					Assets.playSound(Assets.explode);
+					score+=10;
 					if (monster.state == monster.STATE_BOSS) {
+						createExplode(monster.position.x,monster.position.y);
+						Assets.playSound(Assets.explode);
 						monster_01.removeAll(monster_01);
 						randomProblem.removeAll(randomProblem);
 					}
@@ -321,7 +361,9 @@ public class World {
 	public void createExplode3Effect(float x, float y) {
 		WindStromEffect effect = new WindStromEffect(x/32f, y/32f);
 		effect.state=effect.FIRE_EFFECT;
+		Assets.playSound(Assets.fireEffect);
 		explode3Effect.add(effect);
+		
 	}
 	private void createExplode(float x, float y) {
 		ExplodeEffect explode = new ExplodeEffect(x, y);
@@ -332,6 +374,7 @@ public class World {
 		WindStromEffect windstrom = new WindStromEffect(x/32f, y/32f);
 		windstrom.state=windstrom.WIND_EFFECT;
 		windStromEffect.add(windstrom);
+		Assets.playSound(Assets.windEffect);
 	}
 
 

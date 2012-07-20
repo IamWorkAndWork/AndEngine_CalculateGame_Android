@@ -22,6 +22,7 @@ import com.badlogic.androidgames.framework.impl.GLScreen;
 import com.badlogic.androidgames.framework.math.OverlapTester;
 import com.badlogic.androidgames.framework.math.Rectangle;
 import com.badlogic.androidgames.framework.math.Vector2;
+import com.example.calculategame.World.WorldListener;
 
 public class GameScreen extends GLScreen {
 
@@ -44,6 +45,8 @@ public class GameScreen extends GLScreen {
 	String scoreString;
 	FPSCounter fpsCounter;
 	
+	WorldListener worldListener;
+	
 	String showProblem="Attack: ";
 	String keepMyAnser="";
 	public static String keeySpacialQuestion="";
@@ -55,15 +58,42 @@ public class GameScreen extends GLScreen {
 	public static AttackButton attackButton,windButton,effect3Button; 
 	
 	int hpLength=100;
+	public static int limitFire = 6,limitWind=3;
 	
-	public GameScreen(Game game) {
+	public GameScreen(Game game, int whichGame) {
 		super(game);
 		state = GAME_RUNNING;
 		guiCam = new Camera2D(glGraphics,320,480);
 		touchPoint = new Vector2();
 		batcher = new SpriteBatcher(glGraphics,1000);
+		world.GAME_PLAY=whichGame;
 		
-		world = new World();
+        pauseBounds = new Rectangle(290, 8, 32, 32);
+        resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
+        quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
+		
+        worldListener = new WorldListener() {
+			@Override
+			public void explode() {
+				Assets.playSound(Assets.explode);
+			}
+
+			@Override
+			public void windEffect() {
+				Assets.playSound(Assets.windEffect);				
+			}
+
+			@Override
+			public void fireEffect() {
+				Assets.playSound(Assets.fireEffect);
+			}
+
+			@Override
+			public void touchBounds() {
+				Assets.playSound(Assets.clickSound);
+			}
+        };
+		world = new World(worldListener);
 		renderer = new WorldRenderer(glGraphics,batcher,world);
 		
 		lastScore=0;
@@ -91,6 +121,21 @@ public class GameScreen extends GLScreen {
 		}
 		Arrays.fill(isNumberClick, false);
 		Arrays.fill(isOperandClick, false);
+		
+		
+		Assets.music1.stop();
+//		Assets.music2.stop();
+//		Assets.music3.stop();
+		if (Settings.soundEnabled) {
+			if (world.GAME_PLAY==1) {
+				Assets.music2.play();
+				Assets.music2.setLooping(true);
+			}
+			else{
+				Assets.music3.play();
+				Assets.music3.setLooping(true);
+			}
+		}
 	}
 
 	@Override
@@ -101,14 +146,63 @@ public class GameScreen extends GLScreen {
 		
 		switch (state) {
 		case GAME_READY:
-			
+			updateReady();
 			break;
 		case GAME_RUNNING:
 			updateRunning(deltaTime);
 			break;
 		case GAME_PAUSED:
-			
+			updatePaused();
 			break;
+	    case GAME_LEVEL_END:
+	        updateGameOver();
+	        break;
+		}
+	}
+	
+	
+	private void updatePaused() {
+	    List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+	    int len = touchEvents.size();
+	    for(int i = 0; i < len; i++) {
+	        TouchEvent event = touchEvents.get(i);
+	        if(event.type != TouchEvent.TOUCH_UP)
+	            continue;
+	        
+	        touchPoint.set(event.x, event.y);
+	        guiCam.touchToWorld(touchPoint);
+	        
+	        if(OverlapTester.pointInRectangle(resumeBounds, touchPoint)) {
+	            Assets.playSound(Assets.clickSound);
+	            state = GAME_RUNNING;
+	            return;
+	        }
+	        
+	        if(OverlapTester.pointInRectangle(quitBounds, touchPoint)) {
+	            Assets.playSound(Assets.clickSound);
+	            	Settings.addScore(world.score);
+	    			Settings.save(game.getFileIO());
+	    	        state = GAME_OVER;
+	    	        state=GAME_LEVEL_END;
+	            
+	            return;
+	        }
+	    }
+	}
+	
+	
+	private void updateGameOver() {
+		try {
+		    List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+		    int len = touchEvents.size();
+		    for(int i = 0; i < len; i++) {                   
+		        TouchEvent event = touchEvents.get(i);
+		        if(event.type == TouchEvent.TOUCH_UP)
+		            continue;
+		        game.setScreen(new MainMenuScreen(game));
+		    }
+		} catch (Exception e) {
+			Log.d("error", "error = "+e);
 		}
 	}
 	
@@ -144,6 +238,7 @@ public class GameScreen extends GLScreen {
 						isNumberClick[j]=true;
 						keepMyAnser+=j;
 						showProblem+=j;
+						Assets.playSound(Assets.clickSound);
 					}
 				}
 				
@@ -166,14 +261,14 @@ public class GameScreen extends GLScreen {
 							keepMyAnser+="/";
 							showProblem+="/";
 						}
-
+						Assets.playSound(Assets.clickSound);
 					}
 				}
 				//Touch Attack
 //				Log.d("Food", "Food "+attackButton.position.x+":"+attackButton.position.y+" = "+(touchPoint.x)+" : "+(touchPoint.y-15) );
 //				if (OverlapTester.pointInRectangle(attackButton.bounds, touchPoint.x, (touchPoint.y-15)))
 				if (OverlapTester.pointInRectangle(attackButton.bounds, touchPoint))
-				{
+				{						Assets.playSound(Assets.clickSound);
 //					world.food.state=world.food.ATTACK;
 //					world.food.stateTime=0.6f;
 					showProblem="Attack: ";
@@ -182,6 +277,13 @@ public class GameScreen extends GLScreen {
 					keepMyAnser="";
 //					Log.d("Food", "Attack");
 				}
+				
+				
+		        if(OverlapTester.pointInRectangle(pauseBounds, touchPoint)) {
+		            Assets.playSound(Assets.clickSound);
+		            state = GAME_PAUSED;
+		            return;
+		        }
 				
 			}
 			
@@ -199,25 +301,26 @@ public class GameScreen extends GLScreen {
 				isEffect3Button=false;
 
 				if (windAttackBool==true) {
+					limitWind--;
 					world.createWindStromEffect(touchPoint.x,touchPoint.y);
 					windAttackBool=false;
 				}
 				if (effect3AttackBool) {
+					limitFire--;
 					world.createExplode3Effect(touchPoint.x,touchPoint.y);
 					effect3AttackBool=false;
 				}
 //				hpLength-=5;
-				
 			}
 			
 			
 			if (event.type==TouchEvent.TOUCH_DRAGGED) {
 //				windAttack+=0.01f;
-				if (OverlapTester.pointInRectangle(windButton.bounds, touchPoint.x,touchPoint.y-5)) {
+				if (OverlapTester.pointInRectangle(windButton.bounds, touchPoint.x,touchPoint.y-5) && limitWind>0) {
 					isDragWindButton=true;
 					windAttackBool=true;
 				}
-				if (OverlapTester.pointInRectangle(effect3Button.bounds, touchPoint.x,touchPoint.y-5)) {
+				if (OverlapTester.pointInRectangle(effect3Button.bounds, touchPoint.x,touchPoint.y-5) && limitFire>0) {
 					isEffect3Button=true;
 					effect3AttackBool=true;
 				}
@@ -225,6 +328,9 @@ public class GameScreen extends GLScreen {
 		}
 		
 		world.update(deltaTime,game.getInput().getAccelX());
+//	    if(world.score != lastScore) {
+	        lastScore = world.score;
+//	    }
 		
 		for (int i = 0; i < 10; i++) {
 			NumberButton number = NumberButtonList.get(i);
@@ -247,8 +353,7 @@ public class GameScreen extends GLScreen {
 		guiCam.setViewportAndMatrices();
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-//		batcher.beginBatch(texture);
-//		batcher.endBatch();
+		
 		renderNumberButton();
 		renferOperandButton();
 		
@@ -256,10 +361,87 @@ public class GameScreen extends GLScreen {
 		case GAME_RUNNING:
 			presentRunning();
 			break;
+		case GAME_READY:
+			presentReady();
+			break;
+		case GAME_PAUSED:
+			presentPaused();
+			break;
+		case GAME_LEVEL_END:
+			presentGameOver();
+			break;
 		}
-		
 		gl.glDisable(GL10.GL_BLEND);
 //		fpsCounter.logFrame();
+	}
+	
+	
+	private void presentGameOver() {
+		batcher.beginBatch(Assets.items);
+	    batcher.drawSprite(160, 240, 160, 96, Assets.gameOver);        
+	    float scoreWidth = Assets.font.glyphWidth * scoreString.length();
+	    if (scoreString.contains("new highscore")) 
+	    	Assets.font.drawText(batcher, scoreString, 320/2-40, 320,4,10);
+	    else
+	    	Assets.font.drawText(batcher, scoreString, 320/2-20, 320,4,10);
+	    batcher.endBatch();
+	}
+	
+	
+	private void presentReady() {
+		batcher.beginBatch(Assets.items);
+	    batcher.drawSprite(160, 240, 192, 32, Assets.ready);
+	    batcher.endBatch();
+	}
+	
+	
+	private void presentPaused() {        
+        if(lastScore >= Settings.highscores[4]) 
+            scoreString = "new highscore: " + lastScore;
+        else
+            scoreString = "score: " + world.score;
+        
+		
+		batcher.beginBatch(Assets.items);
+	    batcher.drawSprite(160, 240, 192, 96, Assets.pauseMenu);
+	    if (scoreString.contains("new highscore")) 
+	    	Assets.font.drawText(batcher, scoreString, 320/2-40, 320,4,10);
+	    else
+	    	Assets.font.drawText(batcher, scoreString, 320/2-20, 320,4,10);
+	    batcher.endBatch();
+	}
+	
+	
+	private void presentRunning() {
+		
+		batcher.beginBatch(Assets.items);
+		Assets.font.drawText(batcher, showProblem, 10, 250,4,10);
+		Assets.font.drawText(batcher, "Level: "+world.LEVEL, 10, 290,4,10);
+		Assets.font.drawText(batcher, "Destination: "+world.DestinationString, 10, 270,4,10);
+		Assets.font.drawText(batcher, limitFire+"", effect3Button.position.x, 20+20,4,10);
+		Assets.font.drawText(batcher, limitWind+"", windButton.position.x, 20+20,4,10);
+
+		Assets.font.drawText(batcher, "Score: "+world.score, 250, 428,5,12);
+		
+//		Assets.font.drawText(batcher, ""+touchPoint.x+" : "+touchPoint.y, 250, 428,5,12);
+		batcher.drawSprite(300, 20, 32, 32, Assets.pause);
+		batcher.endBatch();
+		
+		if (!isAttackButtonClick) {
+			batcher.beginBatch(Assets.AttackTexture);
+			batcher.drawSprite(attackButton.position.x	, attackButton.position.y, 17f, 25f, Assets.AttackTexturereRegion);
+			batcher.endBatch();
+		}
+		else {
+			batcher.beginBatch(Assets.AttackTexture2);
+			batcher.drawSprite(attackButton.position.x	, attackButton.position.y, 17f, 25f, Assets.AttackTexturereRegion2);
+			batcher.endBatch();
+		}
+		
+		renderWindButton();
+		renderEffect3Button();
+		renderSpacialQuestion();
+//		renderHpPoint();
 	}
 
 
@@ -307,32 +489,6 @@ public class GameScreen extends GLScreen {
 			}
 		}
 	}
-
-	private void presentRunning() {
-		batcher.beginBatch(Assets.items);
-		Assets.font.drawText(batcher, showProblem, 10, 250,4,10);
-		Assets.font.drawText(batcher, "Level: "+world.LEVEL, 10, 290,4,10);
-		Assets.font.drawText(batcher, "Destination: "+world.DestinationString, 10, 270,4,10);
-		batcher.endBatch();
-		
-		if (!isAttackButtonClick) {
-			batcher.beginBatch(Assets.AttackTexture);
-			batcher.drawSprite(attackButton.position.x	, attackButton.position.y, 17f, 25f, Assets.AttackTexturereRegion);
-			batcher.endBatch();
-		}
-		else {
-			batcher.beginBatch(Assets.AttackTexture2);
-			batcher.drawSprite(attackButton.position.x	, attackButton.position.y, 17f, 25f, Assets.AttackTexturereRegion2);
-			batcher.endBatch();
-		}
-		
-		renderWindButton();
-		renderEffect3Button();
-		renderSpacialQuestion();
-//		renderHpPoint();
-	}
-	
-
 
 //	int minus=0;
 //	float time=0.0f;
@@ -383,7 +539,7 @@ public class GameScreen extends GLScreen {
 			magicTime=0;
 			batcher.beginBatch(Assets.MagicCircleTexture);
 			TextureRegion keyFrame = Assets.MagicCircleAnim.getKeyFrame(magicTime	, Animation.ANIMATION_LOOPING);
-			batcher.drawSprite(effect3Button.position.x	, effect3Button.position.y, 17f, 25f, keyFrame);
+			batcher.drawSprite(effect3Button.position.x	, effect3Button.position.y+2, 17f, 30f, keyFrame);
 			batcher.endBatch();
 		}
 	}
